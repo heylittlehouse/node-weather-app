@@ -1,6 +1,9 @@
-const request = require('request');
 const yargs = require('yargs');
 
+const geocode = require('./geocode/geocode');
+const weather = require('./weather/weather');
+
+//Configure commandline input options
 const argv = yargs
 	.options({
 		a: {
@@ -14,17 +17,26 @@ const argv = yargs
 	.alias('help', 'h')
 	.argv;
 
-console.log(argv);
-
-var encodedAddress = encodeURIComponent(argv.a);
-
-var key = 'lSI30OwkAgJXIuZ9kDEkxPd5Xe6b4dRr';
-
-request({
-	url: `http://www.mapquestapi.com/geocoding/v1/address?key=${key}&location=${encodedAddress}`,
-	json: true
-}, (error, response, body) => {
-	console.log(`Address: ${body.results[0].providedLocation.location}`);
-	console.log(`Latitude: ${body.results[0].locations[0].latLng.lat}`);
-	console.log(`Longitude: ${body.results[0].locations[0].latLng.lng}`);
+//Find Lat/Long for given address and return temperature to the user
+geocode.geocodeAddress(argv.address, (errorMessage, latLongResults) => {
+	if (errorMessage) {
+		console.log(errorMessage);
+	} else {
+		weather.getWeather(latLongResults, (errorMessage, weatherResults) => {
+			if (errorMessage) {
+				console.log(errorMessage);
+			}else{
+				console.log(weatherResults);
+			}
+		})
+	}
 });
+
+
+
+
+
+
+
+
+
