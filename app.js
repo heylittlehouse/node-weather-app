@@ -1,8 +1,9 @@
-const request = require('request');
 const yargs = require('yargs');
 
 const geocode = require('./geocode/geocode');
+const weather = require('./weather/weather');
 
+//Configure commandline input options
 const argv = yargs
 	.options({
 		a: {
@@ -16,7 +17,26 @@ const argv = yargs
 	.alias('help', 'h')
 	.argv;
 
-console.log(argv);
+//Find Lat/Long for given address and return temperature to the user
+geocode.geocodeAddress(argv.address, (errorMessage, latLongResults) => {
+	if (errorMessage) {
+		console.log(errorMessage);
+	} else {
+		weather.getWeather(latLongResults, (errorMessage, weatherResults) => {
+			if (errorMessage) {
+				console.log(errorMessage);
+			}else{
+				console.log(weatherResults);
+			}
+		})
+	}
+});
 
-geocode.geocodeAddress(argv.address);
+
+
+
+
+
+
+
 
