@@ -2,9 +2,12 @@ const request = require('request');
 
 const weatherKey = require('../apikeys.json').weatherKey;
 
-var getWeather = (results, callback) => {
+var getWeather = (latLongResults, callback) => {
+	var latitude = latLongResults.latitude;
+	var longitude = latLongResults.longitude;
+
 	request({
-		url: `https://api.darksky.net/forecast/${weatherKey}/34.0789,-118.2641`,
+		url: `https://api.darksky.net/forecast/${weatherKey}/${latitude},${longitude}`,
 		json: true
 	}, (error, response, body) => {
 		if (error) {
