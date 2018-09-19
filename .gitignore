@@ -1,3 +1,4 @@
 node_modules/*
 playground/*
 apikeys.json
+package-lock.json
